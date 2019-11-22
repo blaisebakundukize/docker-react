@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    build:
+      context: . # Where files and folders for the image to be pulled from
+      dockerfile: Dockerfile.dev # Specify a dockerfile coz its name has been changed 
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - .:/app
+  # Downside is this approach want provide 'react watch usage' for testing e.g input for what test to run
+  # to rebuild test use ---> docker-compose up --build
+  # Alternative to this is to use docker exec -> `docker exec -it <container_id> npm run test`
+  #downside is that we have to know the container ID and memorize the command
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    command: ["npm", "run", "test"]
