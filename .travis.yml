@@ -5,5 +5,18 @@ services:
 before_install:
   - docker build -t bblaise/docker-react -f Dockerfile.dev .
 
-scripts:
+script:
   - docker run -e CI=true bblaise/docker-react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-us-east-2-605168509335"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
